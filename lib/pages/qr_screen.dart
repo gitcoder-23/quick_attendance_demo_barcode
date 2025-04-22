@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
@@ -7,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'dart:convert';
 import 'package:wakelock_plus/wakelock_plus.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class QrScreen extends StatefulWidget {
   const QrScreen({Key? key}) : super(key: key);
@@ -19,6 +21,7 @@ class _QrScreenState extends State<QrScreen> {
   Barcode? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  final player = AudioPlayer();
 
   @override
   void reassemble() {
@@ -51,10 +54,12 @@ class _QrScreenState extends State<QrScreen> {
     log('qrCode=> $qrCode');
     final apiUrl = "https://school.dtftsolutions.com/api/capture-attendance";
 
+    // Initialize the audio player
+    final audioPlayer = AudioPlayer();
+
     try {
       var request = http.MultipartRequest('POST', Uri.parse(apiUrl));
-      request.fields['data'] =
-          qrCode.toString(); // Sends the QR code as form-data
+      request.fields['data'] = 'cy0xMDEP'; // or qrCode.toString()
 
       var response =
           await request.send(); // Sends the request as multipart/form-data
@@ -70,6 +75,14 @@ class _QrScreenState extends State<QrScreen> {
 
         // Check if attendance was successfully marked
         if (jsonResponse['status'] == true) {
+          // Play success sound
+          try {
+            await audioPlayer
+                .play(AssetSource('assets/sounds/success_sound2.mp3'));
+          } catch (e) {
+            log('Error playing success sound: $e');
+          }
+
           // Show a dialog confirming attendance
           showDialog(
             context: context,
@@ -87,6 +100,14 @@ class _QrScreenState extends State<QrScreen> {
             Navigator.of(context).pop(); // Close the dialog
           });
         } else {
+          // Play failure sound (optional)
+          try {
+            await audioPlayer.play(AssetSource('assets/sounds/fail_sound.mp3'));
+          } catch (e) {
+            log('Error playing fail sound: $e');
+          }
+
+          // Show a dialog for attendance rejection
           showDialog(
             context: context,
             barrierDismissible: false,
@@ -97,6 +118,7 @@ class _QrScreenState extends State<QrScreen> {
               );
             },
           );
+
           Future.delayed(const Duration(seconds: 3), () {
             Navigator.of(context).pop();
           });
@@ -105,9 +127,76 @@ class _QrScreenState extends State<QrScreen> {
         log('Failed to send data. Status: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error: $e');
+      log('Error: $e');
     }
   }
+
+  // onQrSend(String qrCode) async {
+  //   log('qrCode=> $qrCode');
+  //   final apiUrl = "https://school.dtftsolutions.com/api/capture-attendance";
+
+  //   try {
+  //     var request = http.MultipartRequest('POST', Uri.parse(apiUrl));
+  //     request.fields['data'] =
+  //         qrCode.toString(); // Sends the QR code as form-data
+
+  //     var response =
+  //         await request.send(); // Sends the request as multipart/form-data
+
+  //     if (response.statusCode == 200) {
+  //       // Successfully sent the data
+  //       var responseData = await response.stream.bytesToString();
+  //       log('Response: $responseData');
+  //       var jsonResponse = jsonDecode(responseData);
+
+  //       log('Response status: ${jsonResponse['status']}');
+  //       log('Response message: ${jsonResponse['response']}');
+
+  //       // Check if attendance was successfully marked
+  //       if (jsonResponse['status'] == true) {
+  //         // Play success sound
+  //         await player.play(AssetSource('assets/success_sound1.mp3'));
+
+  //         // Show a dialog confirming attendance
+  //         showDialog(
+  //           context: context,
+  //           barrierDismissible: false,
+  //           builder: (BuildContext context) {
+  //             return AlertDialog(
+  //               title: const Text("Attendance Accepted"),
+  //               content: const Text("Attendance has been marked successfully."),
+  //             );
+  //           },
+  //         );
+
+  //         // Close the dialog after 3 seconds
+  //         Future.delayed(const Duration(seconds: 3), () {
+  //           Navigator.of(context).pop(); // Close the dialog
+  //         });
+  //       } else {
+  //         await player.play(AssetSource('assets/fail_sound.mp3'));
+
+  //         showDialog(
+  //           context: context,
+  //           barrierDismissible: false,
+  //           builder: (BuildContext context) {
+  //             return AlertDialog(
+  //               title: const Text("Attendance Rejected"),
+  //               content: const Text(""),
+  //             );
+  //           },
+  //         );
+  //         Future.delayed(const Duration(seconds: 3), () {
+  //           Navigator.of(context).pop();
+  //         });
+  //       }
+  //     } else {
+  //       log('Failed to send data. Status: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     print('Error: $e');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
