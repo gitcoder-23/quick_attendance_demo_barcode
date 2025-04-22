@@ -142,7 +142,7 @@ class _QrScreenState extends State<QrScreen> {
       appBar: AppBar(title: const Text('QR Scanner')),
       body: Column(
         children: <Widget>[
-          Expanded(flex: 2, child: _buildQrView(context)),
+          Expanded(flex: 3, child: _buildQrView(context)),
           Expanded(
             flex: 1,
             child: FittedBox(
@@ -195,31 +195,31 @@ class _QrScreenState extends State<QrScreen> {
                       ),
                     ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.pauseCamera();
-                          },
-                          child: const Text('Pause',
-                              style: TextStyle(fontSize: 15)),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.resumeCamera();
-                          },
-                          child: const Text('Resume',
-                              style: TextStyle(fontSize: 15)),
-                        ),
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: <Widget>[
+                  //     Container(
+                  //       margin: const EdgeInsets.all(8),
+                  //       child: ElevatedButton(
+                  //         onPressed: () async {
+                  //           await controller?.pauseCamera();
+                  //         },
+                  //         child: const Text('Pause',
+                  //             style: TextStyle(fontSize: 15)),
+                  //       ),
+                  //     ),
+                  //     Container(
+                  //       margin: const EdgeInsets.all(8),
+                  //       child: ElevatedButton(
+                  //         onPressed: () async {
+                  //           await controller?.resumeCamera();
+                  //         },
+                  //         child: const Text('Resume',
+                  //             style: TextStyle(fontSize: 15)),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                 ],
               ),
             ),
