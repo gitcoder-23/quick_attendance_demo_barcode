@@ -59,7 +59,7 @@ class _QrScreenState extends State<QrScreen> {
 
     try {
       var request = http.MultipartRequest('POST', Uri.parse(apiUrl));
-      request.fields['data'] = 'cy0xMDEP'; // or qrCode.toString()
+      request.fields['data'] = qrCode.toString(); // or qrCode.toString()
 
       var response =
           await request.send(); // Sends the request as multipart/form-data
