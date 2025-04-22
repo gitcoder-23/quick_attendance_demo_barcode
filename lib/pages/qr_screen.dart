@@ -113,15 +113,15 @@ class _QrScreenState extends State<QrScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  if (result != null)
-                    Text('Barcode Data: ${result!.code}')
-                  else
-                    const Text('Scan a code'),
+                  // if (result != null)
+                  //   Text('Barcode Data: ${result!.code}')
+                  // else
+                  //   const Text('Scan a code'),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Container(
-                        margin: const EdgeInsets.all(8),
+                        margin: const EdgeInsets.only(left: 8, right: 8),
                         child: ElevatedButton(
                           onPressed: () async {
                             await controller?.toggleFlash();
