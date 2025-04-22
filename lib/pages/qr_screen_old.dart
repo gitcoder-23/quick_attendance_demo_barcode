@@ -1,24 +1,24 @@
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
-import 'package:http/http.dart' as http;
-import 'package:http_parser/http_parser.dart';
-import 'dart:convert';
 
-class QrScreen extends StatefulWidget {
-  const QrScreen({Key? key}) : super(key: key);
+class QrScreenOld extends StatefulWidget {
+  const QrScreenOld({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _QrScreenState();
+  State<StatefulWidget> createState() => _QrScreenOldState();
 }
 
-class _QrScreenState extends State<QrScreen> {
+class _QrScreenOldState extends State<QrScreenOld> {
   Barcode? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
+  // In order to get hot reload to work we need to pause the camera if the platform
+  // is Android, or resume the camera if the platform is iOS.
   @override
   void reassemble() {
     super.reassemble();
@@ -31,73 +31,38 @@ class _QrScreenState extends State<QrScreen> {
   @override
   void initState() {
     super.initState();
+    // You can initialize the QR scanner here if required, or wait for the view to load
     Future.delayed(const Duration(seconds: 2), () {
+      // Auto-start the QR scanner after 2 seconds
       controller?.resumeCamera();
     });
   }
 
-  // Function to send the QR code to the API
-  onQrSend(String qrCode) async {
-    log('qrCode=> $qrCode');
-    final apiUrl = "https://school.dtftsolutions.com/api/capture-attendance";
+  // onQrSend(String qrCode) async {
+  //   final apiUrl = "https://school.dtftsolutions.com/api/capture-attendance";
 
-    try {
-      var request = http.MultipartRequest('POST', Uri.parse(apiUrl));
-      request.fields['data'] =
-          qrCode.toString(); // Sends the QR code as form-data
+  //   try {
+  //     var response = await http.post(
+  //       Uri.parse(apiUrl),
+  //       headers: <String, String>{
+  //         'Content-Type': 'application/x-www-form-urlencoded',
+  //       },
+  //       body: {
+  //         'data': qrCode, // This is the QR code sent as form-data
+  //       },
+  //     );
 
-      var response =
-          await request.send(); // Sends the request as multipart/form-data
-
-      if (response.statusCode == 200) {
-        // Successfully sent the data
-        var responseData = await response.stream.bytesToString();
-        log('Response: $responseData');
-        var jsonResponse = jsonDecode(responseData);
-
-        log('Response status: ${jsonResponse['status']}');
-        log('Response message: ${jsonResponse['response']}');
-
-        // Check if attendance was successfully marked
-        if (jsonResponse['status'] == true) {
-          // Show a dialog confirming attendance
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text("Attendance Accepted"),
-                content: const Text("Attendance has been marked successfully."),
-              );
-            },
-          );
-
-          // Close the dialog after 3 seconds
-          Future.delayed(const Duration(seconds: 3), () {
-            Navigator.of(context).pop(); // Close the dialog
-          });
-        } else {
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text("Attendance Rejected"),
-                content: const Text(""),
-              );
-            },
-          );
-          Future.delayed(const Duration(seconds: 3), () {
-            Navigator.of(context).pop();
-          });
-        }
-      } else {
-        log('Failed to send data. Status: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error: $e');
-    }
-  }
+  //     if (response.statusCode == 200) {
+  //       // Handle successful response
+  //       log('Response: ${response.body}');
+  //     } else {
+  //       // Handle error response
+  //       log('Failed to send data. Status: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     log('Error: $e');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -115,51 +80,54 @@ class _QrScreenState extends State<QrScreen> {
                 children: <Widget>[
                   if (result != null)
                     Text('Barcode Data: ${result!.code}')
+
+                  // Text(
+                  //     'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
                   else
                     const Text('Scan a code'),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Container(
                         margin: const EdgeInsets.all(8),
                         child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.toggleFlash();
-                            setState(() {});
-                          },
-                          child: FutureBuilder(
-                            future: controller?.getFlashStatus(),
-                            builder: (context, snapshot) {
-                              return Text(
-                                  'Flash ${snapshot.data == false ? 'Off' : 'On'}');
+                            onPressed: () async {
+                              await controller?.toggleFlash();
+                              setState(() {});
                             },
-                          ),
-                        ),
+                            child: FutureBuilder(
+                              future: controller?.getFlashStatus(),
+                              builder: (context, snapshot) {
+                                return Text(
+                                    'Flash ${snapshot.data == false ? 'Off' : 'On'}');
+                              },
+                            )),
                       ),
                       Container(
                         margin: const EdgeInsets.all(8),
                         child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.flipCamera();
-                            setState(() {});
-                          },
-                          child: FutureBuilder(
-                            future: controller?.getCameraInfo(),
-                            builder: (context, snapshot) {
-                              if (snapshot.data != null) {
-                                return Text(
-                                    'Camera facing ${describeEnum(snapshot.data!)}');
-                              } else {
-                                return const Text('loading');
-                              }
+                            onPressed: () async {
+                              await controller?.flipCamera();
+                              setState(() {});
                             },
-                          ),
-                        ),
-                      ),
+                            child: FutureBuilder(
+                              future: controller?.getCameraInfo(),
+                              builder: (context, snapshot) {
+                                if (snapshot.data != null) {
+                                  return Text(
+                                      'Camera facing ${describeEnum(snapshot.data!)}');
+                                } else {
+                                  return const Text('loading');
+                                }
+                              },
+                            )),
+                      )
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Container(
                         margin: const EdgeInsets.all(8),
@@ -180,7 +148,7 @@ class _QrScreenState extends State<QrScreen> {
                           child: const Text('Resume',
                               style: TextStyle(fontSize: 15)),
                         ),
-                      ),
+                      )
                     ],
                   ),
                 ],
@@ -193,6 +161,7 @@ class _QrScreenState extends State<QrScreen> {
   }
 
   Widget _buildQrView(BuildContext context) {
+    // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
     var scanArea = (MediaQuery.of(context).size.width < 400 ||
             MediaQuery.of(context).size.height < 400)
         ? 300.0
@@ -220,15 +189,6 @@ class _QrScreenState extends State<QrScreen> {
       setState(() {
         result = scanData;
       });
-
-      print('result=> $result');
-
-      // After getting the result, send it after 2 seconds delay
-      if (result != null) {
-        Future.delayed(const Duration(seconds: 2), () {
-          onQrSend(result!.code.toString());
-        });
-      }
     });
   }
 
