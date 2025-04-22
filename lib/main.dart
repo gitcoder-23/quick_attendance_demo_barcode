@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:quick_attendance/pages/splash_screen.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  WakelockPlus.enable();
   runApp(const MyApp());
 }
 

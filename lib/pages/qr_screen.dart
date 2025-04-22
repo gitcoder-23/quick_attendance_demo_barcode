@@ -6,6 +6,7 @@ import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'dart:convert';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 class QrScreen extends StatefulWidget {
   const QrScreen({Key? key}) : super(key: key);
@@ -31,9 +32,18 @@ class _QrScreenState extends State<QrScreen> {
   @override
   void initState() {
     super.initState();
+    // Ensure the screen stays awake when the app is launched
+    WakelockPlus.enable();
     Future.delayed(const Duration(seconds: 2), () {
       controller?.resumeCamera();
     });
+  }
+
+  @override
+  void dispose() {
+    // Disable wakelock when the widget is disposed to prevent memory leaks
+    WakelockPlus.disable();
+    super.dispose();
   }
 
   // Function to send the QR code to the API
