@@ -97,7 +97,7 @@ class _QrScreenState extends State<QrScreen> {
           );
 
           // Close the dialog after 3 seconds
-          Future.delayed(const Duration(seconds: 3), () async {
+          Future.delayed(const Duration(seconds: 2), () async {
             Navigator.of(context).pop();
             await controller?.resumeCamera();
           });
@@ -123,7 +123,7 @@ class _QrScreenState extends State<QrScreen> {
             },
           );
 
-          Future.delayed(const Duration(seconds: 3), () async {
+          Future.delayed(const Duration(seconds: 2), () async {
             Navigator.of(context).pop();
             await controller?.resumeCamera();
           });
@@ -260,9 +260,9 @@ class _QrScreenState extends State<QrScreen> {
 
       print('result=> $result');
 
-      // After getting the result, send it after 2 seconds delay
+      // After getting the result, send it after 1 seconds delay
       if (result != null) {
-        Future.delayed(const Duration(seconds: 2), () {
+        Future.delayed(const Duration(seconds: 1), () {
           onQrSend(result!.code.toString());
         });
       }
