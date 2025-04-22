@@ -44,7 +44,7 @@ class _QrScreenState extends State<QrScreen> {
       appBar: AppBar(title: const Text('QR Scanner')),
       body: Column(
         children: <Widget>[
-          Expanded(flex: 4, child: _buildQrView(context)),
+          Expanded(flex: 2, child: _buildQrView(context)),
           Expanded(
             flex: 1,
             child: FittedBox(
