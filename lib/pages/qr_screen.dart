@@ -71,7 +71,8 @@ class _QrScreenState extends State<QrScreen> {
                             child: FutureBuilder(
                               future: controller?.getFlashStatus(),
                               builder: (context, snapshot) {
-                                return Text('Flash: ${snapshot.data}');
+                                return Text(
+                                    'Flash ${snapshot.data == false ? 'Off' : 'On'}');
                               },
                             )),
                       ),
@@ -107,7 +108,7 @@ class _QrScreenState extends State<QrScreen> {
                             await controller?.pauseCamera();
                           },
                           child: const Text('Pause',
-                              style: TextStyle(fontSize: 20)),
+                              style: TextStyle(fontSize: 15)),
                         ),
                       ),
                       Container(
@@ -117,7 +118,7 @@ class _QrScreenState extends State<QrScreen> {
                             await controller?.resumeCamera();
                           },
                           child: const Text('Resume',
-                              style: TextStyle(fontSize: 20)),
+                              style: TextStyle(fontSize: 15)),
                         ),
                       )
                     ],
