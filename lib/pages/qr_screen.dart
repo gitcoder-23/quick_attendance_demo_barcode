@@ -1,15 +1,14 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:audioplayers/audioplayers.dart';
+// import 'package:audioplayers/audioplayers.dart' as audioplayers;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 import 'package:http/http.dart' as http;
-import 'package:http_parser/http_parser.dart';
 import 'dart:convert';
 import 'package:wakelock_plus/wakelock_plus.dart';
-import 'package:audioplayers/audioplayers.dart';
+import 'package:just_audio/just_audio.dart';
 
 class QrScreen extends StatefulWidget {
   const QrScreen({Key? key}) : super(key: key);
@@ -59,14 +58,14 @@ class _QrScreenState extends State<QrScreen> {
 
   @override
   void dispose() {
-    // Disable wakelock when the widget is disposed to prevent memory leaks
     WakelockPlus.disable();
+    player.dispose();
+    controller?.dispose();
     super.dispose();
   }
 
   // Function to send the QR code to the API
   onQrSend(String qrCode) async {
-    log('qrCode=> $qrCode');
     final apiUrl = "https://school.dtftsolutions.com/api/capture-attendance";
 
     // Initialize the audio player
@@ -82,21 +81,17 @@ class _QrScreenState extends State<QrScreen> {
       if (response.statusCode == 200) {
         // Successfully sent the data
         var responseData = await response.stream.bytesToString();
-        log('Response: $responseData');
         var jsonResponse = jsonDecode(responseData);
-
-        log('Response message: ${jsonResponse['data']['userData']['name']}');
 
         // Check if attendance was successfully marked
         if (jsonResponse['status'] == true) {
+          try {
+            await player.setAsset('assets/audio/success_sound1.mp3');
+            await player.play();
+          } catch (e) {
+            log('Error playing success sound: $e');
+          }
           await controller?.pauseCamera();
-          // Play success sound
-          // try {
-          //   await audioPlayer
-          //       .play(AssetSource('assets/sounds/success_sound2.mp3'));
-          // } catch (e) {
-          //   log('Error playing success sound: $e');
-          // }
 
           String studentName = jsonResponse['data']['userData'] != null
               ? jsonResponse['data']['userData']['name']
@@ -156,16 +151,17 @@ class _QrScreenState extends State<QrScreen> {
 
           Future.delayed(const Duration(seconds: 2), () async {
             Navigator.of(context).pop();
+            await player.pause();
             await controller?.resumeCamera();
           });
         } else {
-          await controller?.pauseCamera();
-
           try {
-            await audioPlayer.play(AssetSource('assets/sounds/fail_sound.mp3'));
+            await audioPlayer.setAsset('assets/audio/fail_sound.mp3');
+            await player.play();
           } catch (e) {
             log('Error playing fail sound: $e');
           }
+          await controller?.pauseCamera();
 
           showDialog(
             context: context,
@@ -180,6 +176,7 @@ class _QrScreenState extends State<QrScreen> {
 
           Future.delayed(const Duration(seconds: 2), () async {
             Navigator.of(context).pop();
+            await player.pause();
             await controller?.resumeCamera();
           });
         }
