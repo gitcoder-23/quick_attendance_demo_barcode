@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -98,14 +99,41 @@ class _QrScreenState extends State<QrScreen> {
             log('Error playing success sound: $e');
           }
 
-          // Show a dialog confirming attendance
+          String studentName =
+              jsonResponse['response']['data']['userData'] != null
+                  ? jsonResponse['response']['data']['userData']['name']
+                  : '';
+
+          String className =
+              jsonResponse['response']['data']['userData'] != null
+                  ? jsonResponse['response']['data']['userData']['class']
+                  : '';
+
+          String secName = jsonResponse['response']['data']['userData'] != null
+              ? jsonResponse['response']['data']['userData']['section']
+              : '';
+
+          String time = jsonResponse['response']['data']['attendance'] != null
+              ? jsonResponse['response']['data']['attendance']['time']
+              : '';
+          DateTime parsedTime = DateTime.parse('2022-01-01 $time');
+
+          String formattedTime = DateFormat('hh:mm a').format(parsedTime);
+
+          String date = jsonResponse['response']['data']['attendance'] != null
+              ? jsonResponse['response']['data']['attendance']['date']
+              : '';
+          DateTime parsedDate = DateTime.parse(date);
+          String formattedDate = DateFormat('dd-MMMM-yyyy').format(parsedDate);
+
           showDialog(
             context: context,
             barrierDismissible: false,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: const Text("Attendance Accepted"),
-                content: const Text("Attendance has been marked successfully."),
+                title: Text(
+                    "Attendance marked for ${studentName} (${className}-${secName})"),
+                content: Text("on ${formattedDate} at ${formattedTime}"),
               );
             },
           );
