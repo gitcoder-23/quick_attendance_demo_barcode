@@ -21,7 +21,7 @@ class _QrScreenState extends State<QrScreen> {
   Barcode? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  final player = AudioPlayer();
+  final audioPlayer = AudioPlayer();
 
   String selectedOption = 'check_in';
   final radioBtnList = [
@@ -59,7 +59,7 @@ class _QrScreenState extends State<QrScreen> {
   @override
   void dispose() {
     WakelockPlus.disable();
-    player.dispose();
+    audioPlayer.dispose();
     controller?.dispose();
     super.dispose();
   }
@@ -68,26 +68,21 @@ class _QrScreenState extends State<QrScreen> {
   onQrSend(String qrCode) async {
     final apiUrl = "https://school.dtftsolutions.com/api/capture-attendance";
 
-    // Initialize the audio player
-    final audioPlayer = AudioPlayer();
-
     try {
       var request = http.MultipartRequest('POST', Uri.parse(apiUrl));
-      request.fields['data'] = qrCode.toString(); // or qrCode.toString()
+      request.fields['data'] = qrCode.toString();
 
-      var response =
-          await request.send(); // Sends the request as multipart/form-data
+      var response = await request.send();
 
       if (response.statusCode == 200) {
-        // Successfully sent the data
         var responseData = await response.stream.bytesToString();
         var jsonResponse = jsonDecode(responseData);
 
         // Check if attendance was successfully marked
         if (jsonResponse['status'] == true) {
           try {
-            await player.setAsset('assets/audio/success_sound1.mp3');
-            await player.play();
+            await audioPlayer.setAsset('assets/audio/success_sound1.mp3');
+            await audioPlayer.play();
           } catch (e) {
             log('Error playing success sound: $e');
           }
@@ -150,14 +145,14 @@ class _QrScreenState extends State<QrScreen> {
           );
 
           Future.delayed(const Duration(seconds: 2), () async {
-            await player.pause();
+            await audioPlayer.pause();
             await controller?.resumeCamera();
             Navigator.of(context).pop();
           });
         } else {
           try {
             await audioPlayer.setAsset('assets/audio/fail_sound.mp3');
-            await player.play();
+            await audioPlayer.play();
           } catch (e) {
             log('Error playing fail sound: $e');
           }
@@ -176,7 +171,7 @@ class _QrScreenState extends State<QrScreen> {
 
           Future.delayed(const Duration(seconds: 2), () async {
             Navigator.of(context).pop();
-            await player.pause();
+            await audioPlayer.pause();
             await controller?.resumeCamera();
           });
         }
