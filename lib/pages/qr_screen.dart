@@ -126,34 +126,29 @@ class _QrScreenState extends State<QrScreen> {
           showDialog(
             context: context,
             barrierDismissible: false,
-            useSafeArea: false,
             builder: (BuildContext context) {
-              return Container(
-                width: 500,
-                height: 500,
-                child: AlertDialog(
-                  title: Column(
-                    children: [
-                      Text(
-                        softWrap: true,
-                        textAlign: TextAlign.left,
-                        style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black),
-                        "Attendance marked for ${studentName} (${className}-${secName})",
-                      ),
-                    ],
-                  ),
-                  content: Text(
-                    softWrap: true,
-                    style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                    "on ${formattedDate} at ${formattedTime}",
-                    textAlign: TextAlign.left,
-                  ),
+              return AlertDialog(
+                title: Column(
+                  children: [
+                    Text(
+                      "Attendance marked for ${studentName} (${className}-${secName})",
+                      softWrap: true,
+                      textAlign: TextAlign.left,
+                      style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                    ),
+                  ],
+                ),
+                content: Text(
+                  "on ${formattedDate} at ${formattedTime}",
+                  softWrap: true,
+                  style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                  textAlign: TextAlign.left,
                 ),
               );
             },
