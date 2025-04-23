@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'Quick Attendance',
+              'Hazira Sathi',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
