@@ -85,43 +85,40 @@ class _QrScreenState extends State<QrScreen> {
         log('Response: $responseData');
         var jsonResponse = jsonDecode(responseData);
 
-        log('Response status: ${jsonResponse['status']}');
-        log('Response message: ${jsonResponse['response']}');
+        log('Response message: ${jsonResponse['data']['userData']['name']}');
 
         // Check if attendance was successfully marked
         if (jsonResponse['status'] == true) {
           await controller?.pauseCamera();
           // Play success sound
-          try {
-            await audioPlayer
-                .play(AssetSource('assets/sounds/success_sound2.mp3'));
-          } catch (e) {
-            log('Error playing success sound: $e');
-          }
+          // try {
+          //   await audioPlayer
+          //       .play(AssetSource('assets/sounds/success_sound2.mp3'));
+          // } catch (e) {
+          //   log('Error playing success sound: $e');
+          // }
 
-          String studentName =
-              jsonResponse['response']['data']['userData'] != null
-                  ? jsonResponse['response']['data']['userData']['name']
-                  : '';
-
-          String className =
-              jsonResponse['response']['data']['userData'] != null
-                  ? jsonResponse['response']['data']['userData']['class']
-                  : '';
-
-          String secName = jsonResponse['response']['data']['userData'] != null
-              ? jsonResponse['response']['data']['userData']['section']
+          String studentName = jsonResponse['data']['userData'] != null
+              ? jsonResponse['data']['userData']['name']
               : '';
 
-          String time = jsonResponse['response']['data']['attendance'] != null
-              ? jsonResponse['response']['data']['attendance']['time']
+          String className = jsonResponse['data']['userData'] != null
+              ? jsonResponse['data']['userData']['class']
+              : '';
+
+          String secName = jsonResponse['data']['userData'] != null
+              ? jsonResponse['data']['userData']['section']
+              : '';
+
+          String time = jsonResponse['data']['attendance'] != null
+              ? jsonResponse['data']['attendance']['time']
               : '';
           DateTime parsedTime = DateTime.parse('2022-01-01 $time');
 
           String formattedTime = DateFormat('hh:mm a').format(parsedTime);
 
-          String date = jsonResponse['response']['data']['attendance'] != null
-              ? jsonResponse['response']['data']['attendance']['date']
+          String date = jsonResponse['data']['attendance'] != null
+              ? jsonResponse['data']['attendance']['date']
               : '';
           DateTime parsedDate = DateTime.parse(date);
           String formattedDate = DateFormat('dd-MMMM-yyyy').format(parsedDate);
@@ -129,16 +126,39 @@ class _QrScreenState extends State<QrScreen> {
           showDialog(
             context: context,
             barrierDismissible: false,
+            useSafeArea: false,
             builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text(
-                    "Attendance marked for ${studentName} (${className}-${secName})"),
-                content: Text("on ${formattedDate} at ${formattedTime}"),
+              return Container(
+                width: 500,
+                height: 500,
+                child: AlertDialog(
+                  title: Column(
+                    children: [
+                      Text(
+                        softWrap: true,
+                        textAlign: TextAlign.left,
+                        style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
+                        "Attendance marked for ${studentName} (${className}-${secName})",
+                      ),
+                    ],
+                  ),
+                  content: Text(
+                    softWrap: true,
+                    style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
+                    "on ${formattedDate} at ${formattedTime}",
+                    textAlign: TextAlign.left,
+                  ),
+                ),
               );
             },
           );
 
-          // Close the dialog after 3 seconds
           Future.delayed(const Duration(seconds: 2), () async {
             Navigator.of(context).pop();
             await controller?.resumeCamera();
@@ -146,14 +166,12 @@ class _QrScreenState extends State<QrScreen> {
         } else {
           await controller?.pauseCamera();
 
-          // Play failure sound (optional)
           try {
             await audioPlayer.play(AssetSource('assets/sounds/fail_sound.mp3'));
           } catch (e) {
             log('Error playing fail sound: $e');
           }
 
-          // Show a dialog for attendance rejection
           showDialog(
             context: context,
             barrierDismissible: false,
