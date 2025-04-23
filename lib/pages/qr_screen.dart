@@ -150,9 +150,9 @@ class _QrScreenState extends State<QrScreen> {
           );
 
           Future.delayed(const Duration(seconds: 2), () async {
-            Navigator.of(context).pop();
             await player.pause();
             await controller?.resumeCamera();
+            Navigator.of(context).pop();
           });
         } else {
           try {
