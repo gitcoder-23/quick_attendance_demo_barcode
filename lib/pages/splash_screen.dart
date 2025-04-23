@@ -21,34 +21,44 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image:
+                AssetImage('assets/images/splash.png'), // Set your image here
+            fit: BoxFit.cover, // This will cover the entire screen
+          ),
+        ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment:
+              MainAxisAlignment.spaceBetween, // Space between elements
           children: [
-            Text(
-              'Hazira Sathi',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+            // Centered content
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(
+                    color: Colors.black,
+                    strokeWidth: 0.6,
+                  ),
+                ],
               ),
             ),
-            SizedBox(height: 15),
-            Text(
-              'Powered by Dtft Solutions',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue,
+            // Bottom text
+            Padding(
+              padding: const EdgeInsets.all(20.0), // Adjust padding as needed
+              child: Text(
+                'Powered by Dtft Solutions',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
               ),
             ),
-            SizedBox(height: 15),
-            CircularProgressIndicator(
-              color: Colors.black,
-              strokeWidth: 0.6,
-            )
           ],
         ),
       ),
