@@ -23,6 +23,20 @@ class _QrScreenState extends State<QrScreen> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   final player = AudioPlayer();
 
+  String selectedOption = 'check_in';
+  final radioBtnList = [
+    {
+      'id': '1',
+      'value': 'check_in',
+      'label': 'Check In',
+    },
+    {
+      'id': '2',
+      'value': 'check_out',
+      'label': 'Check Out',
+    }
+  ];
+
   @override
   void reassemble() {
     super.reassemble();
@@ -139,9 +153,41 @@ class _QrScreenState extends State<QrScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('QR Scanner')),
+      appBar: AppBar(title: const Text('Hazira Sathi'), centerTitle: true),
       body: Column(
         children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: radioBtnList.map((item) {
+              return Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      selectedOption = item['value'].toString();
+                    });
+                  },
+                  child: Row(
+                    children: <Widget>[
+                      Radio<String>(
+                        value: item['value'].toString(),
+                        groupValue: selectedOption,
+                        onChanged: (String? value) {
+                          setState(() {
+                            selectedOption = value!;
+                          });
+                        },
+                      ),
+                      Text(
+                        item['label'].toString(),
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
           Expanded(flex: 3, child: _buildQrView(context)),
           Expanded(
             flex: 1,

@@ -35,6 +35,16 @@ class _SplashScreenState extends State<SplashScreen> {
                 color: Colors.black,
               ),
             ),
+            SizedBox(height: 15),
+            Text(
+              'Powered by Dtft Solutions',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+              ),
+            ),
+            SizedBox(height: 15),
             CircularProgressIndicator(
               color: Colors.black,
               strokeWidth: 0.6,
