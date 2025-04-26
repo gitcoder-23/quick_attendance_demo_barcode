@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quick_attendance/pages/password_screen.dart';
 import 'package:quick_attendance/pages/splash_screen.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: SplashScreen(),
+      home: PasswordScreen(),
     );
   }
 }
