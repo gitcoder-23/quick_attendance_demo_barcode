@@ -49,7 +49,8 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             // Bottom text
             Padding(
-              padding: const EdgeInsets.all(20.0), // Adjust padding as needed
+              padding:
+                  const EdgeInsets.symmetric(vertical: 45.0, horizontal: 15),
               child: Text(
                 'Powered by Dtft Solutions',
                 style: TextStyle(

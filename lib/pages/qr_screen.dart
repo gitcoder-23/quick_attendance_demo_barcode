@@ -233,6 +233,7 @@ class _QrScreenState extends State<QrScreen> {
                   //   Text('Barcode Data: ${result!.code}')
                   // else
                   //   const Text('Scan a code'),
+                  SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -253,7 +254,7 @@ class _QrScreenState extends State<QrScreen> {
                         ),
                       ),
                       Container(
-                        margin: const EdgeInsets.all(8),
+                        margin: const EdgeInsets.only(left: 8, right: 8),
                         child: ElevatedButton(
                           onPressed: () async {
                             await controller?.flipCamera();
@@ -273,6 +274,18 @@ class _QrScreenState extends State<QrScreen> {
                         ),
                       ),
                     ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 40.0, horizontal: 15),
+                    child: Text(
+                      'Powered by Dtft Solutions',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
                   // Row(
                   //   mainAxisAlignment: MainAxisAlignment.center,
