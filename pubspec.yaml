@@ -41,6 +41,8 @@ dependencies:
   just_audio: ^0.10.0
   flutter_screen_lock: ^9.2.1+1
   local_auth: ^2.3.0
+  connectivity_plus: ^6.1.4
+  new_version_plus: ^0.1.0
 
 dev_dependencies:
   flutter_test:
