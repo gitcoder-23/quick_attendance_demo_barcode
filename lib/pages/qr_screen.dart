@@ -1,14 +1,14 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:audioplayers/audioplayers.dart';
+// import 'package:audioplayers/audioplayers.dart' as audioplayers;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 import 'package:http/http.dart' as http;
-import 'package:http_parser/http_parser.dart';
 import 'dart:convert';
 import 'package:wakelock_plus/wakelock_plus.dart';
-import 'package:audioplayers/audioplayers.dart';
+import 'package:just_audio/just_audio.dart';
 
 class QrScreen extends StatefulWidget {
   const QrScreen({Key? key}) : super(key: key);
@@ -21,7 +21,7 @@ class _QrScreenState extends State<QrScreen> {
   Barcode? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  final player = AudioPlayer();
+  final audioPlayer = AudioPlayer();
 
   String selectedOption = 'check_in';
   final radioBtnList = [
@@ -58,74 +58,106 @@ class _QrScreenState extends State<QrScreen> {
 
   @override
   void dispose() {
-    // Disable wakelock when the widget is disposed to prevent memory leaks
     WakelockPlus.disable();
+    audioPlayer.dispose();
+    controller?.dispose();
     super.dispose();
   }
 
   // Function to send the QR code to the API
   onQrSend(String qrCode) async {
-    log('qrCode=> $qrCode');
     final apiUrl = "https://school.dtftsolutions.com/api/capture-attendance";
-
-    // Initialize the audio player
-    final audioPlayer = AudioPlayer();
 
     try {
       var request = http.MultipartRequest('POST', Uri.parse(apiUrl));
-      request.fields['data'] = qrCode.toString(); // or qrCode.toString()
+      request.fields['data'] = qrCode.toString();
 
-      var response =
-          await request.send(); // Sends the request as multipart/form-data
+      var response = await request.send();
 
       if (response.statusCode == 200) {
-        // Successfully sent the data
         var responseData = await response.stream.bytesToString();
-        log('Response: $responseData');
         var jsonResponse = jsonDecode(responseData);
-
-        log('Response status: ${jsonResponse['status']}');
-        log('Response message: ${jsonResponse['response']}');
 
         // Check if attendance was successfully marked
         if (jsonResponse['status'] == true) {
-          await controller?.pauseCamera();
-          // Play success sound
           try {
-            await audioPlayer
-                .play(AssetSource('assets/sounds/success_sound2.mp3'));
+            await audioPlayer.setAsset('assets/audio/success_sound1.mp3');
+            await audioPlayer.play();
           } catch (e) {
             log('Error playing success sound: $e');
           }
+          await controller?.pauseCamera();
 
-          // Show a dialog confirming attendance
+          String studentName = jsonResponse['data']['userData'] != null
+              ? jsonResponse['data']['userData']['name']
+              : '';
+
+          String className = jsonResponse['data']['userData'] != null
+              ? jsonResponse['data']['userData']['class']
+              : '';
+
+          String secName = jsonResponse['data']['userData'] != null
+              ? jsonResponse['data']['userData']['section']
+              : '';
+
+          String time = jsonResponse['data']['attendance'] != null
+              ? jsonResponse['data']['attendance']['time']
+              : '';
+          DateTime parsedTime = DateTime.parse('2022-01-01 $time');
+
+          String formattedTime = DateFormat('hh:mm a').format(parsedTime);
+
+          String date = jsonResponse['data']['attendance'] != null
+              ? jsonResponse['data']['attendance']['date']
+              : '';
+          DateTime parsedDate = DateTime.parse(date);
+          String formattedDate = DateFormat('dd-MMMM-yyyy').format(parsedDate);
+
           showDialog(
             context: context,
             barrierDismissible: false,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: const Text("Attendance Accepted"),
-                content: const Text("Attendance has been marked successfully."),
+                title: Column(
+                  children: [
+                    Text(
+                      "Attendance marked for ${studentName} (${className}-${secName})",
+                      softWrap: true,
+                      textAlign: TextAlign.left,
+                      style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                    ),
+                  ],
+                ),
+                content: Text(
+                  "on ${formattedDate} at ${formattedTime}",
+                  softWrap: true,
+                  style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                  textAlign: TextAlign.left,
+                ),
               );
             },
           );
 
-          // Close the dialog after 3 seconds
           Future.delayed(const Duration(seconds: 2), () async {
-            Navigator.of(context).pop();
+            await audioPlayer.pause();
             await controller?.resumeCamera();
+            Navigator.of(context).pop();
           });
         } else {
-          await controller?.pauseCamera();
-
-          // Play failure sound (optional)
           try {
-            await audioPlayer.play(AssetSource('assets/sounds/fail_sound.mp3'));
+            await audioPlayer.setAsset('assets/audio/fail_sound.mp3');
+            await audioPlayer.play();
           } catch (e) {
             log('Error playing fail sound: $e');
           }
+          await controller?.pauseCamera();
 
-          // Show a dialog for attendance rejection
           showDialog(
             context: context,
             barrierDismissible: false,
@@ -139,6 +171,7 @@ class _QrScreenState extends State<QrScreen> {
 
           Future.delayed(const Duration(seconds: 2), () async {
             Navigator.of(context).pop();
+            await audioPlayer.pause();
             await controller?.resumeCamera();
           });
         }
