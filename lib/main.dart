@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quick_attendance/pages/password_screen.dart';
+import 'package:hazirasathi/pages/password_screen.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 void main() {

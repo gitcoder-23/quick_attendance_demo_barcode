@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quick_attendance/pages/qr_screen.dart';
+import 'package:hazirasathi/pages/qr_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
