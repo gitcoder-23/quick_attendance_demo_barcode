@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quick_attendance/pages/splash_screen.dart';
+import 'package:hazirasathi/pages/password_screen.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 void main() {
@@ -15,12 +15,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Quick Attendance',
+      title: 'Hazira Sathi',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: SplashScreen(),
+      home: PasswordScreen(),
     );
   }
 }

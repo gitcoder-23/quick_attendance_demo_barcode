@@ -1,4 +1,4 @@
-# quick_attendance
+# hazirasathi
 
 A new Flutter project.
 
