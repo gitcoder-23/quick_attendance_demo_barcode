@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hazirasathi/pages/qr_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../app_webview.dart';
 
@@ -14,11 +15,14 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    // Future.delayed(const Duration(seconds: 3), () {
+    //   _launchURL();
+    // });
     Future.delayed(const Duration(seconds: 3), () {
       // Navigator.of(context).pushReplacement(
       //   MaterialPageRoute(builder: (_) => const QrScreen()),
       // );
-      Navigator.of(context).pushReplacement(
+      Navigator.of(context).push(
         MaterialPageRoute(
             builder: (_) => const AppWebview(
                   url: 'https://194.164.149.194/web-cam',
@@ -26,6 +30,16 @@ class _SplashScreenState extends State<SplashScreen> {
                 )),
       );
     });
+  }
+
+  // Function to launch the URL in the default browser
+  void _launchURL() async {
+    final Uri url = Uri.parse('https://www.google.com/'); // Correct URL format
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   @override
