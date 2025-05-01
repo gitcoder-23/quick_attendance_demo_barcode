@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hazirasathi/pages/qr_screen.dart';
 
+import '../app_webview.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -13,8 +15,15 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 3), () {
+      // Navigator.of(context).pushReplacement(
+      //   MaterialPageRoute(builder: (_) => const QrScreen()),
+      // );
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const QrScreen()),
+        MaterialPageRoute(
+            builder: (_) => const AppWebview(
+                  url: 'https://194.164.149.194/web-cam',
+                  name: 'Hazira Sathi',
+                )),
       );
     });
   }
