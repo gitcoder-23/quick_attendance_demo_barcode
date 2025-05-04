@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../app_webview.dart';
 
@@ -13,15 +14,41 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), _checkPermissions);
+  }
+
+  // Add this to your splash screen before navigation
+  Future<void> _checkPermissions() async {
+    if (await Permission.camera.request().isGranted) {
+      // Permissions granted, proceed with navigation
       Navigator.of(context).push(
         MaterialPageRoute(
-            builder: (_) => const AppWebview(
-                  url: 'https://attendance.billing.soujanya360.com/',
-                  name: '',
-                )),
+          builder: (_) => const AppWebview(
+            url: 'https://attendance.billing.soujanya360.com/',
+            name: '',
+          ),
+        ),
       );
-    });
+    } else {
+      // Handle permission denial
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Permission required'),
+          content: Text('Camera permission is needed for attendance check-in'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => openAppSettings(),
+              child: Text('Open Settings'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   @override
