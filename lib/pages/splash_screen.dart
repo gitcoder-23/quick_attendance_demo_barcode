@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _checkPermissions() async {
     if (await Permission.camera.request().isGranted) {
       // Permissions granted, proceed with navigation
-      Navigator.of(context).push(
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (_) => const AppWebview(
             url: 'https://attendance.billing.soujanya360.com/',
