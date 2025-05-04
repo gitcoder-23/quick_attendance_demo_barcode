@@ -66,9 +66,10 @@ https://firebase.google.com/docs/crashlytics/get-started?platform=android#add-sd
 
 https://youtu.be/vExTH4L5AuI?si=gKSUGgsgwjLzDFVm
 
-// How can I create a keystore?
+// How can I create a keystore & Sighned apk-aab?
 https://stackoverflow.com/questions/3997748/how-can-i-create-a-keystore
-
+https://youtu.be/vq39SOkyTtM?si=5SPgOi_ow6Gr7sNL
+https://youtu.be/-IlRU9ischk?si=ucpptkQj-wKLXiOs
 
 
 
