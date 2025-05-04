@@ -76,8 +76,8 @@ class _AppInternetConnectionWrapperState
 
   Future<void> checkVersion() async {
     final newVersion = NewVersionPlus(
-      iOSId: 'com.dtft.hazirasathi',
-      androidId: 'com.dtft.hazirasathi',
+      iOSId: 'com.dtft.faceX',
+      androidId: 'com.dtft.faceX',
       androidPlayStoreCountry: "es_ES",
       androidHtmlReleaseNotes: true,
     );

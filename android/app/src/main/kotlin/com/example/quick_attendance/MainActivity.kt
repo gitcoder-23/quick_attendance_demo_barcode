@@ -1,4 +1,4 @@
-package com.dtft.hazirasathi
+package com.dtft.faceX
 
 import io.flutter.embedding.android.FlutterActivity
 

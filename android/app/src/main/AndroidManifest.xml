@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:tools="http://schemas.android.com/tools"
-package="com.dtft.hazirasathi">
+package="com.dtft.faceX">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -13,7 +13,7 @@ package="com.dtft.hazirasathi">
 
     <application
         android:requestLegacyExternalStorage="true"
-        android:label="Hazira Sathi"
+        android:label="Soujanya FaceX"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true">
