@@ -1,1 +1,80 @@
-58289
+figma==
+https://www.figma.com/design/4GTfWMr8sr2DyHgm7HhbtW/DFT-(Copy)?node-id=737-7391&node-type=frame&m=dev
+https://www.figma.com/design/1ApzwATUbOLlCn56xjWHra/DFT?node-id=0-1&node-type=CANVAS&t=tXaKZgUAAgGzJSpZ-0
+
+// Splash Screen Generator
+https://hotpot.ai/design/splash-screen?id=1
+
+// Appicon Generator
+https://easyappicon.com/
+https://www.appicon.co/
+
+// Android Signing Report for SHA
+cd android && ./gradlew signingReport && cd ..
+
+
+// no-tree-shake-icons build
+flutter clean
+flutter build apk --no-tree-shake-icons
+
+
+// For AAB
+cd android
+./gradlew bundleRelease
+
+flutter build appbundle
+
+// Play store
+https://play.google.com/console/developers
+https://play.google.com/console/u/0/developers/7635400782921193672/app-list
+
+// google ads
+
+https://admob.google.com/v2/home
+
+https://docs.flutter.dev/cookbook/plugins/google-mobile-ads
+
+https://youtu.be/zC075pcM7rc?si=n7p7_JvCSy19dZ-3
+
+https://youtu.be/kSh8-quhFHM?si=pFynZhev5w0zyvGA
+
+https://youtu.be/IqOB6xCcPgU?si=omhH0b2VV8B2bYli
+
+
+// Ad MOB implement
+https://youtu.be/tFpodbjIBm8?si=teBslQdNXZyLnfCi
+https://youtu.be/Dasi7lEm3Ms?si=A-wcMLvpyIKrRSB9
+
+// Admob Unitid creation
+https://youtu.be/DDL5g6PlIuc?si=BFwTttCD9gmwKfN_
+
+// Admob Remove
+https://youtu.be/O1ZpngmFN1g?si=ATaNZgxYGVfU21rL
+
+
+// Earning
+https://youtu.be/VcLCI826RtU?si=7h27eW9MeskQEJvq
+
+
+
+// Firebase crashlitics
+https://firebase.google.com/docs/crashlytics/get-started?platform=android#add-sdk
+
+
+
+// Fix for "Namespace not specified. Please specify a namespace in the module's build.gradle." Error
+
+https://youtu.be/vExTH4L5AuI?si=gKSUGgsgwjLzDFVm
+
+// How can I create a keystore?
+https://stackoverflow.com/questions/3997748/how-can-i-create-a-keystore
+
+
+
+
+ujups2376
+ujups@student@123
+
+// Multiple simulator showing
+  https://youtu.be/IsBjHtLhW6E
+Password : 58289
