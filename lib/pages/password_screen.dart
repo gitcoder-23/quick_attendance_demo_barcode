@@ -68,7 +68,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
           ],
         ),
         body: ScreenLock(
-          correctString: '58289',
+          correctString: '32071',
           onUnlocked: () {
             // Handle successful unlock, navigate to home screen
             Navigator.pushReplacement(
