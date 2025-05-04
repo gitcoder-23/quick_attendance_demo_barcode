@@ -59,7 +59,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
     return AppInternetConnectionWrapper(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Welcome to Hazira Sathi'),
+          title: const Text('Welcome to Soujanya FaceX'),
           actions: [
             IconButton(
               icon: const Icon(Icons.fingerprint),
